@@ -1,0 +1,20 @@
+p {
+    text-align: center;
+    width: 40%;
+    min-width: 200px;
+    padding: 2em;
+    margin: .2em auto;
+}
+
+.counter {
+    background: #ff7657;
+}
+
+.feedback {
+    background: #665c84;
+    color: white;
+}
+
+.history {
+     background: #ffba5a;
+}

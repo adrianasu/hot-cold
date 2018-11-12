@@ -1,0 +1,17 @@
+button {
+    border: none;
+    padding: 1em;
+    border-radius: 2px;
+}
+
+button:first-child {
+    margin: 5% 44% 2%;
+    min-width: 16%;
+    background: #6b76ff;
+    color: white;
+}
+
+.board button:hover,
+.board button:focus {
+    background: #a5aeff;
+}
