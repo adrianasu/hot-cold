@@ -9,45 +9,43 @@ export default class Board extends React.Component{
         this.state = {
             number: Math.floor(Math.random()*100)+1,
             feedback: 'Guess a number between 1 and 100',
-            currentGuess: '',
             history: []
         }
     }
 
-    generateFeedback() {
-        let highestNumber = Math.max(this.state.currentGuess, this.state.number);
-        let lowestNumber = Math.min(this.state.currentGuess, this.state.number);
-        console.log("HIGH ", highestNumber, " LOW ", lowestNumber);
-        if( this.state.currentGuess > 100 || this.state.currentGuess < 1) {
+    generateFeedback( currentGuess ){
+        let highestNumber = Math.max(currentGuess, this.state.number);
+        let lowestNumber = Math.min(currentGuess, this.state.number);
+       
+        if( currentGuess > 100 || currentGuess < 1 ){
             return "The number should be between 1 and 100";
-        }
-        else if( this.state.currentGuess in this.state.history ){
+        } else if( this.state.history.includes(currentGuess) ){
             return "You already guessed that number.";
         } else if( (highestNumber - lowestNumber) > 10 ){
             return "Cold";
-        } else if( highestNumber === lowestNumber) {
+        } else if( highestNumber === lowestNumber ){
             return "You got it!";
         } else {
             return "Hot";
         }
-        
     }
 
-    componentDidUpdate( prevProps, prevState ){
-        if( prevState.currentGuess !== this.state.currentGuess ) {
-            let feedback = this.generateFeedback();
-            if ( feedback  === "You already guessed that number." ){
-                this.setState({ feedback });
-            } else {
-                this.setState({
-                    feedback,
-                    history: [...this.state.history, this.state.currentGuess],
-                });
-            }   
+    generateResults( currentGuess ){
+        currentGuess = parseInt(currentGuess, 10);
+        let feedback = this.generateFeedback(currentGuess);
+        if( feedback === "You already guessed that number." ){
+            this.setState({
+                feedback
+            });
+        } else {
+            this.setState({
+                feedback,
+                history: [...this.state.history, currentGuess],
+            });
         }
     }
 
-    newGame(event) {
+    newGame( event ){
         event.preventDefault();
         this.setState({
             number: Math.floor(Math.random() * 100) + 1,
@@ -56,14 +54,19 @@ export default class Board extends React.Component{
         });
     }
 
+    timesGuessed(){
+        let pluralize = this.state.history.length !== 1;
+        return (`You've guessed ${this.state.history.length} ${pluralize ? 'times': 'time'}`);
+    }
+
     render(){
 
         return(
             <div className="board">
                 <button onClick={ e => this.newGame(e) }>New Game</button>
                 <Info name="feedback" text={ this.state.feedback } />
-                <GuessForm onGuess={ currentGuess => this.setState({ currentGuess })}/>
-                <Info name="counter" text={ `You've guessed ${this.state.history.length} times` } />
+                <GuessForm onGuess={ currentGuess => this.generateResults(currentGuess) }/>
+                <Info name="counter" text={ this.timesGuessed() } />
                 <Info name="history" text={ `Guessed numbers: ${[...this.state.history].join(", ")}` } />
             </div>
         );
